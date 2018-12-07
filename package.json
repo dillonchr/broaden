@@ -1,0 +1,23 @@
+{
+  "name": "broaden",
+  "version": "1.0.0",
+  "description": "meeting donut, pair up with peeps",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dillonchr/broaden.git"
+  },
+  "author": "@dillonchr",
+  "license": "GPL-2.0",
+  "bugs": {
+    "url": "https://github.com/dillonchr/broaden/issues"
+  },
+  "homepage": "https://github.com/dillonchr/broaden#readme",
+  "dependencies": {
+    "dotenv": "^6.2.0"
+  }
+}
