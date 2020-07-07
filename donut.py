@@ -14,7 +14,14 @@ def download_tsv(url):
 
 def parse_tsv(text):
     """ parse tsv """
-    return [Family(r.split("\t")) for r in text.split("\n")]
+    return [parse_row(r) for r in text.split("\n")]
+
+
+def parse_row(row):
+    """ make row into family """
+    a, b, c = row.split("\t")
+    return Family(a, b, c)
+
 
 def make_pick(people, count_requested, booked):
     """ make picks """
@@ -25,6 +32,7 @@ def make_pick(people, count_requested, booked):
     pick = random.choice(options)
     booked.append(pick.name)
     return make_pick(people, count_requested - pick.count, booked)
+
 
 if __name__ == "__main__":
     test_url = ""
