@@ -1,5 +1,9 @@
+#!/usr/bin/env python
+
 """ be you broadened """
 from collections import namedtuple
+import random
+import sys
 import urllib.request
 
 Family = namedtuple("Family", "name count formalness")
@@ -9,33 +13,40 @@ def download_tsv(url):
     with urllib.request.urlopen(url) as response:
         data = response.read()
         text = data.decode("utf-8")
-        return text
+        return parse_tsv(text)
+
+
+def read_local_tsv(path):
+    """ fetch spreadsheet locally """
+    with open(path, "r") as sheet:
+        return parse_tsv(sheet.read())
 
 
 def parse_tsv(text):
     """ parse tsv """
-    return [parse_row(r) for r in text.split("\n")]
+    return [Family(*r.split("\t")) for r in text.split("\n")]
 
 
-def parse_row(row):
-    """ make row into family """
-    a, b, c = row.split("\t")
-    return Family(a, b, c)
-
-
-def make_pick(people, count_requested, booked):
+def make_pick(people, count_requested, booked=[]):
     """ make picks """
-    if not count_requested:
-        return [f.name for f in booked]
+    if count_requested < 1:
+        return booked
 
     options = [p for p in people if p.name not in booked]
+    if not options:
+        return booked
+
     pick = random.choice(options)
     booked.append(pick.name)
-    return make_pick(people, count_requested - pick.count, booked)
+    return make_pick(people, count_requested - int(pick.count), booked)
 
 
 if __name__ == "__main__":
-    test_url = ""
-    test_data = download_tsv(test_url)
-    test_people = parse_tsv(test_data)
-    print(make_pick(test_people, 6, []))
+    formalness = 1
+    count = 6
+    if len(sys.argv) > 2:
+        formalness = int(sys.argv[2])
+    if len(sys.argv) > 1:
+        count = int(sys.argv[1])
+    p = [p for p in read_local_tsv("people.tsv") if int(p.formalness) <= formalness]
+    print(make_pick(p, count))
